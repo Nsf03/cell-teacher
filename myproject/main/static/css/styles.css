@@ -5,3 +5,18 @@
 .cell-container a {
     border: 1px solid rgba(0,0,0,0); /* прозрачная область клика */
 }
+body {
+    font-family: Arial, sans-serif; /* общий шрифт */
+    margin: 40px;
+}
+
+h1 {
+    color: #2c3e50; /* заголовки */
+}
+
+button {
+    padding: 10px 15px;
+    background-color: #3498db; /* стиль кнопок */
+    color: white;
+    border-radius: 6px;
+} 
