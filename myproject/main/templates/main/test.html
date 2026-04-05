@@ -1,0 +1,295 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Test{% endblock %}
+
+{% block content %}
+<div class="test-container">
+    <!-- КРАСИВАЯ ИНСТРУКЦИЯ -->
+    <div class="test-header">
+        <h1>Тест: Подпиши органеллы</h1>
+        <p class="test-description">Кликните на каждую компоненту клетки и введите её название<br><em></em></p>
+    </div>
+    
+    <div class="cell-container">
+        <!-- Основное изображение клетки -->
+        <img src="{% static 'img/cell.png' %}" alt="cell" class="cell-image">
+        
+        <!-- Кликабельные органеллы поверх клетки -->
+        <a href="#" class="organelle nucleus" data-organelle="nucleus" data-correct-name="ядро" title="Нажмите, чтобы назвать органеллу">
+            <img src="{% static 'img/nuclear.png' %}" alt="Nucleus">
+        </a>
+        
+        <a href="#" class="organelle mito1" data-organelle="mitochondria1" data-correct-name="митохондрия" title="Нажмите, чтобы назвать органеллу">
+            <img src="{% static 'img/mito1.png' %}" alt="Mitochondria 1">
+        </a>
+        
+        <a href="#" class="organelle mito2" data-organelle="mitochondria2" data-correct-name="митохондрия" title="Нажмите, чтобы назвать органеллу">
+            <img src="{% static 'img/mito2.png' %}" alt="Mitochondria 2">
+        </a>
+        
+        <a href="#" class="organelle lysosome" data-organelle="lysosome" data-correct-name="лизосома" title="Нажмите, чтобы назвать органеллу">
+            <img src="{% static 'img/lysosome.png' %}" alt="Lysosome">
+        </a>
+        
+        <a href="#" class="organelle membrane" data-organelle="membrane" data-correct-name="мембрана" title="Нажмите, чтобы назвать органеллу">
+            <img src="{% static 'img/memb.png' %}" alt="Membrane">
+        </a>
+    </div>
+    
+    <!-- Модальное окно для ввода ответа -->
+    <div id="answerModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Введите название органеллы:</h2>
+            <input type="text" id="answerInput" placeholder="Введите название...">
+            <button id="submitBtn" class="btn">Проверить</button>
+            <div id="feedback" class="feedback"></div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .test-header {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);  /* ЦВЕТ ИНСТРУКЦИИ */
+        color: white;
+        padding: 30px;
+        border-radius: 10px;
+        text-align: center;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .test-header h1 {
+        font-size: 2em;
+        margin-bottom: 10px;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+    }
+    
+    .test-description {
+        font-size: 1.1em;
+        line-height: 1.6;
+        opacity: 0.95;
+    }
+    
+    .test-description em {
+        display: block;
+        margin-top: 10px;
+        font-style: italic;
+        opacity: 0.85;
+    }
+    
+    .test-container {
+        max-width: 800px;
+        margin: 20px auto;
+    }
+    
+    .cell-container {
+        position: relative;
+        width: 1000px;
+        margin: 20px auto;
+    }
+    
+    .cell-image {
+        width: 100%;
+        display: block;
+    }
+    
+    .organelle {
+        position: absolute;
+        cursor: pointer;
+        text-decoration: none;
+        transition: opacity 0.3s ease;
+    }
+    
+    .organelle:hover {
+        opacity: 0.8;
+        filter: brightness(1.1);
+    }
+    
+    .organelle img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+    
+    /* Позиционирование органелл (такие же как в home) */
+    .nucleus {
+        width: 18%;
+        top: 27%;
+        left: 22%;
+        z-index: 10;  /* ← ВЫШЕ МЕМБРАНЫ */
+    }
+    
+    .mito1 {
+        width: 12%;
+        top: 18%;
+        left: 12%;
+        z-index: 10;  /* ← ВЫШЕ МЕМБРАНЫ */
+    }
+    
+    .mito2 {
+        width: 12%;
+        top: 48%;
+        left: 37%;
+        z-index: 10;  /* ← ВЫШЕ МЕМБРАНЫ */
+    }
+    
+    .lysosome {
+        width: 8%;
+        top: 20%;
+        left: 40%;
+        z-index: 10;  /* ← ВЫШЕ МЕМБРАНЫ */
+    }
+    
+    .membrane {
+        width: 60%;
+        top: 0%;
+        left: 0.1%;
+        z-index: 1;  /* ← САМЫЙ НИЖНИЙ СЛОЙ */
+    }
+    
+    /* Модальное окно */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;  /* ← ВЫСОКИЙ z-index, ВЫШЕ ОРГАНЕЛЛ */
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+    
+    .modal-content {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);  /* ЦВЕТ МОДАЛЬНОГО ОКНА */
+        color: white;
+        margin: 15% auto;
+        padding: 30px;
+        border: none;
+        width: 300px;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+    
+    .modal-content h2 {
+        margin-bottom: 15px;
+        font-size: 1.3em;
+    }
+    
+    .close {
+        color: white;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        opacity: 0.8;
+    }
+    
+    .close:hover {
+        opacity: 1;
+    }
+    
+    #answerInput {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 4px;
+        box-sizing: border-box;
+        background-color: rgba(255, 255, 255, 0.9);
+        font-size: 1em;
+    }
+    
+    #answerInput:focus {
+        outline: none;
+        border-color: white;
+        background-color: white;
+    }
+    
+    .btn {
+        background-color: rgba(255, 255, 255, 0.3);  /* ЦВЕТ КНОПКИ */
+        color: white;
+        padding: 10px 30px;
+        border: 2px solid white;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-top: 15px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+    
+    .btn:hover {
+        background-color: rgba(255, 255, 255, 0.5);
+        transform: scale(1.05);
+    }
+    
+    .feedback {
+        margin-top: 10px;
+        font-weight: bold;
+    }
+    
+    .correct {
+        color: green;
+    }
+    
+    .incorrect {
+        color: red;
+    }
+</style>
+
+<script>
+    let currentOrganelle = null;
+    const results = {};
+    const modal = document.getElementById('answerModal');
+    const closeBtn = document.querySelector('.close');
+    const answerInput = document.getElementById('answerInput');
+    const submitBtn = document.getElementById('submitBtn');
+    const feedback = document.getElementById('feedback');
+    
+    // При клике на органеллу
+    document.querySelectorAll('.organelle').forEach(element => {
+        element.addEventListener('click', (e) => {
+            e.preventDefault();
+            currentOrganelle = {
+                name: element.dataset.organelle,
+                correctName: element.dataset.correctName
+            };
+            feedback.className = 'feedback';
+            feedback.textContent = '';
+            answerInput.value = '';
+            answerInput.focus();
+            modal.style.display = 'block';
+        });
+    });
+    
+    // Закрытие модального окна
+    closeBtn.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+    
+    // Проверка ответа
+    submitBtn.addEventListener('click', checkAnswer);
+    answerInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') checkAnswer();
+    });
+    
+    function checkAnswer() {
+        const userAnswer = answerInput.value.trim().toLowerCase();
+        const correctAnswer = currentOrganelle.correctName.toLowerCase();
+        
+        if (userAnswer === correctAnswer) {
+            feedback.textContent = '✓ Правильно!';
+            feedback.className = 'feedback correct';
+            results[currentOrganelle.name] = true;
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 1000);
+        } else {
+            feedback.textContent = '✗ Неправильно. Попробуйте ещё раз.';
+            feedback.className = 'feedback incorrect';
+            results[currentOrganelle.name] = false;
+        }
+    }
+</script>
+{% endblock %}

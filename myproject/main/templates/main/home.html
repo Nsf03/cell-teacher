@@ -1,13 +1,166 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Django test</title>
-</head>
-<body>
+{% extends 'main/base.html' %}
+{% load static %}
 
-<h1>Мой первый Django сайт</h1>
+{% block title %}Home{% endblock %}
 
-<button>Кнопка</button>
+{% block content %}
+<div class="home-container">
+    <!-- ПОДПИСЬ с инструкцией -->
+    <div class="instruction-box">
+        <p class="instruction-text">👆 Нажмите на компоненту клетки, чтобы узнать о ней больше</p>
+    </div>
+    
+    <!-- ИЗОБРАЖЕНИЕ КЛЕТКИ -->
+    <div class="cell-container">
+    <!-- Основное изображение клетки -->
+    <img src="{% static 'img/cell.png' %}" alt="cell" class="cell-image">
+    
+    <!-- Кликабельные органеллы поверх клетки -->
+    <!-- Ядро (nucleus) -->
+    <a href="{% url 'organelle_detail' 'nucleus' %}" class="organelle nucleus" title="Ядро (Nucleus)">
+        <img src="{% static 'img/nuclear.png' %}" alt="Nucleus">
+    </a>
+    
+    <!-- Митохондрии (mitochondria) -->
+    <a href="{% url 'organelle_detail' 'mitochondria' %}" class="organelle mito1" title="Митохондрия (Mitochondria)">
+        <img src="{% static 'img/mito1.png' %}" alt="Mitochondria 1">
+    </a>
+    
+    <a href="{% url 'organelle_detail' 'mitochondria' %}" class="organelle mito2" title="Митохондрия (Mitochondria)">
+        <img src="{% static 'img/mito2.png' %}" alt="Mitochondria 2">
+    </a>
+    
+    <!-- Лизосома (lysosome) -->
+    <a href="{% url 'organelle_detail' 'lysosome' %}" class="organelle lysosome" title="Лизосома (Lysosome)">
+        <img src="{% static 'img/lysosome.png' %}" alt="Lysosome">
+    </a>
+    
+    <!-- Мембрана (membrane) -->
+    <a href="{% url 'organelle_detail' 'membrane' %}" class="organelle membrane" title="Мембрана (Membrane)">
+        <img src="{% static 'img/memb.png' %}" alt="Membrane">
+    </a>
+    </div>
+    
+    <!-- КНОПКА НА ТЕСТ -->
+    <div class="test-button-container">
+        <a href="{% url 'test' %}" class="test-button">Проверить свои знания </a>
+    </div>
+</div>
 
-</body>
-</html>
+<style>
+    .home-container {
+        max-width: 800px;
+        margin: 30px auto;
+        padding: 20px;
+    }
+    
+    /* БЛОК С ИНСТРУКЦИЕЙ */
+    .instruction-box {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+        color: white;
+        padding: 25px;
+        border-radius: 10px;
+        text-align: center;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .instruction-text {
+        font-size: 1.3em;
+        font-weight: bold;
+        letter-spacing: 0.5px;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    }
+    
+    .cell-container {
+        position: relative;
+        width: 1000px;  
+        margin: 20px auto;
+    }
+    
+    .cell-image {
+        width: 100%; 
+        display: block;
+    }
+    
+    .organelle {
+        position: absolute;
+        cursor: pointer;
+        text-decoration: none;
+        transition: opacity 0.3s ease;
+    }
+    
+    .organelle:hover {
+        opacity: 0.8;
+        filter: brightness(1.1);
+    }
+    
+    .organelle img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+        .membrane {
+        width: 60%;
+        top: 0%;
+        left: 0.1%;
+        z-index: 1;  
+    }
+    
+    /* Позиционирование отдельных органелл (в % от размера контейнера) */
+    .nucleus {
+        width: 18%;  /* ← размер ядра */
+        top: 27%;     /* ← смещение от верхнего край по вертикали */
+        left: 22%;    /* ← смещение от левого края по горизонтали */
+        z-index: 10;  /* ← ВЫШЕ МЕМБРАНЫ */
+    }
+    
+    .mito1 {
+        width: 12%;
+        top: 18%;
+        left: 12%;
+        z-index: 10;  
+    }
+    
+    .mito2 {
+        width: 12%;
+        top: 48%;
+        left: 37%;
+        z-index: 10; 
+    }
+    
+    .lysosome {
+        width: 8%;
+        top: 20%;
+        left: 40%;
+        z-index: 10; 
+    }
+    
+
+    
+    /* КНОПКА НА ТЕСТ */
+    .test-button-container {
+        text-align: center;
+        margin-top: 30px;
+    }
+    
+    .test-button {
+        display: inline-block;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);  /* ЦВЕТ КНОПКИ */
+        color: white;
+        padding: 15px 40px;
+        border-radius: 50px;
+        text-decoration: none;
+        font-size: 1.1em;
+        font-weight: bold;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .test-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    }
+</style>
+{% endblock %}
